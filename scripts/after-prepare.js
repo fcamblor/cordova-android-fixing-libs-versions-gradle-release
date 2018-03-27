@@ -10,8 +10,8 @@ try{
 
 const GRADLE_FILENAME = path.resolve(process.cwd(), 'platforms', 'android', 'build.gradle');
 const PACKAGE_PATTERNS = {
-    PLAY_SERVICES_VERSION: /(compile "com.google.android.gms:[^:]+:)([^"]+)"/,
-    ANDROID_SUPPORT_VERSION: /(compile "com.android.support:[^:]+:)([^"]+)"/
+    PLAY_SERVICES_VERSION: /(compile "com.google.android.gms:[^:]+:)([^"]+)"/gi,
+    ANDROID_SUPPORT_VERSION: /(compile "com.android.support:[^:]+:)([^"]+)"/gi
 };
 
 // 1. Parse cordova.xml file and fetch this plugin's <variable name="PLAY_SERVICES_VERSION" />
