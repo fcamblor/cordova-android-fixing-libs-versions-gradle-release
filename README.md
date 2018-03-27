@@ -151,7 +151,7 @@ License
 
 The MIT License
 
-Copyright (c) 2017 Dave Alden / Working Edge Ltd.
+Copyright (c) 2018 Frédéric Camblor.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
