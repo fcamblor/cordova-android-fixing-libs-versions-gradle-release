@@ -1,4 +1,4 @@
-plugin add cordova-android-fixing-libs-versions-gradle-release
+cordova-android-fixing-libs-versions-gradle-release
 ======================================
 
 This Cordova/Phonegap plugin for Android aligns various versions of the Play Services & Android Support libraries specified by other plugins to a specific version.
