@@ -1,0 +1,35 @@
+repositories{
+  // Google APIs are now hosted at Maven
+  maven {
+    url 'https://maven.google.com'
+  }
+}
+
+def PLUGIN_NAME = "cordova-android-fixing-libs-versions-gradle-release"
+
+// Fetch versions variables from properties.gradle
+apply from: PLUGIN_NAME + '/properties.gradle'
+
+// List of libs to search for.
+def PLAY_SERVICES_LIBS = [
+        'com.google.android.gms'
+]
+def ANDROID_SUPPORT_LIBS = [
+        'com.android.support'
+]
+
+def ANDROID_SUPPORT_IGNORED = [
+        'multidex',
+        'multidex-instrumentation'
+]
+
+println("+-----------------------------------------------------------------");
+println("| " + PLUGIN_NAME + ": play-services=" + PLAY_SERVICES_VERSION + ", android-support=" + ANDROID_SUPPORT_VERSION);
+println("+-----------------------------------------------------------------");
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group in PLAY_SERVICES_LIBS) { details.useVersion PLAY_SERVICES_VERSION }
+        if (details.requested.group in ANDROID_SUPPORT_LIBS && !(details.requested.name in ANDROID_SUPPORT_IGNORED)) { details.useVersion ANDROID_SUPPORT_VERSION }
+    }
+}

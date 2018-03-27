@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-android-play-services-gradle-release"
-        version="1.2.1">
+        id="cordova-android-fixing-libs-versions-gradle-release"
+        version="1.0.0">
 
-    <name>cordova-android-play-services-gradle-release</name>
+    <name>cordova-android-fixing-libs-versions-gradle-release</name>
     <description>Cordova/Phonegap plugin to align various versions of the Play Services library specified by other plugins to a specific version</description>
     <author>Dave Alden</author>
     
@@ -19,9 +19,10 @@
         <hook type="before_build" src="scripts/after-prepare.js" />
         <hook type="after_plugin_install" src="scripts/after-prepare.js" />
         <preference name="PLAY_SERVICES_VERSION" default="12.+" />
-        <framework src="cordova-android-play-services-gradle-release.gradle" custom="true" type="gradleReference" />
-        <source-file src="properties.gradle" target-dir="cordova-android-play-services-gradle-release" /> <!-- cordova-android@6-->
-        <source-file src="properties.gradle" target-dir="app/cordova-android-play-services-gradle-release" /> <!-- cordova-android@7-->
+        <preference name="ANDROID_SUPPORT_VERSION" default="27.+" />
+        <framework src="cordova-android-fixing-libs-versions-gradle-release.gradle" custom="true" type="gradleReference" />
+        <source-file src="properties.gradle" target-dir="cordova-android-fixing-libs-versions-gradle-release" /> <!-- cordova-android@6-->
+        <source-file src="properties.gradle" target-dir="app/cordova-android-fixing-libs-versions-gradle-release" /> <!-- cordova-android@7-->
     </platform>
 
 </plugin>

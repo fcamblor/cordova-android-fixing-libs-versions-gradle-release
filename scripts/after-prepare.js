@@ -1,4 +1,4 @@
-const PLUGIN_NAME = "cordova-android-play-services-gradle-release";
+const PLUGIN_NAME = "cordova-android-fixing-libs-versions-gradle-release";
 
 try{
     var fs = require('fs');
@@ -9,7 +9,10 @@ try{
 }
 
 const GRADLE_FILENAME = path.resolve(process.cwd(), 'platforms', 'android', 'build.gradle');
-const PACKAGE_PATTERN = /(compile "com.google.android.gms:[^:]+:)([^"]+)"/;
+const PACKAGE_PATTERNS = {
+    PLAY_SERVICES_VERSION: /(compile "com.google.android.gms:[^:]+:)([^"]+)"/,
+    ANDROID_SUPPORT_VERSION: /(compile "com.android.support:[^:]+:)([^"]+)"/
+};
 
 // 1. Parse cordova.xml file and fetch this plugin's <variable name="PLAY_SERVICES_VERSION" />
 fs.readFile(path.resolve(process.cwd(), 'config.xml'), function (err, data) {
@@ -22,34 +25,35 @@ fs.readFile(path.resolve(process.cwd(), 'config.xml'), function (err, data) {
         for (var n = 0, len = plugins.length; n < len; n++) {
             var plugin = plugins[n];
             if (plugin.$.name === PLUGIN_NAME) {
-                if (!plugin.variable || plugin.variable.length === 0) {
-                    return console.log(PLUGIN_NAME, ' Failed to find <variable name="PLAY_SERVICES_VERSION" /> in config.xml');
+                if (!plugin.variable || plugin.variable.length < 2) {
+                    return console.log(PLUGIN_NAME, ' Failed to find <variable name="PLAY_SERVICES_VERSION" /> and <variable name="ANDROID_SUPPORT_VERSION" /> in config.xml');
                 }
                 // 2.  Update .gradle file.
-                setGradleVersion(plugin.variable.pop().$.value);
+                setGradleVersion(plugin.variable);
                 break;
             }
         }
     });
 });
 
-/**
- * Write properties.gradle with:
- *
- ext {
-  PLAY_SERVICES_VERSION = '<VERSION>'
-}
- *
- */
-function setGradleVersion(version) {
+function setGradleVersion(variables) {
+    console.info(PLUGIN_NAME, "TEST : "+JSON.stringify(variables));
     fs.readFile(GRADLE_FILENAME, function (err, contents) {
         if (err) {
             return console.log(PLUGIN_NAME, " ERROR: ", err);
         }
-        contents = contents.toString();
-        fs.writeFile(GRADLE_FILENAME, contents.replace(PACKAGE_PATTERN, "$1" + version + '"'), 'utf8', function (err) {
-            if (err) return console.log(PLUGIN_NAME, ": FAILED TO WRITE ", GRADLE_FILENAME, " > ", version, err);
-            console.log(PLUGIN_NAME, ": WROTE ", GRADLE_FILENAME, " > ", version);
+
+        var gradleContent = contents.toString();
+        for(var i=0; i<variables.length; i++) {
+            var variableName = variables[i].$.name;
+            var version = variables[i].$.value;
+
+            gradleContent = gradleContent.replace(PACKAGE_PATTERNS[variableName], "$1" + version + '"');
+        }
+
+        fs.writeFile(GRADLE_FILENAME, gradleContent, 'utf8', function (err) {
+            if (err) return console.log(PLUGIN_NAME, ": FAILED TO WRITE ", GRADLE_FILENAME, " > ", JSON.stringify(variables), err);
+            console.log(PLUGIN_NAME, ": WROTE ", GRADLE_FILENAME, " > ", JSON.stringify(variables));
         });
     });
 }
