@@ -37,7 +37,6 @@ fs.readFile(path.resolve(process.cwd(), 'config.xml'), function (err, data) {
 });
 
 function setGradleVersion(variables) {
-    console.info(PLUGIN_NAME, "TEST : "+JSON.stringify(variables));
     fs.readFile(GRADLE_FILENAME, function (err, contents) {
         if (err) {
             return console.log(PLUGIN_NAME, " ERROR: ", err);
